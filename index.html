@@ -6,9 +6,9 @@
   <meta name="theme-color" content="#0a0820">
   <meta name="color-scheme" content="dark">
   <meta name="format-detection" content="telephone=no">
-  <meta name="description" content="一个朋友间的趣味互动问答小游戏：六道连环关卡，测一测你的良心。">
+  <meta name="description" content="一个朋友间的趣味互动问答小游戏：五道连环关卡，测一测你的良心。">
   <meta property="og:title" content="良心大考验">
-  <meta property="og:description" content="六道连环关卡，测一测你的良心。敢来挑战吗？">
+  <meta property="og:description" content="五道连环关卡，测一测你的良心。敢来挑战吗？">
   <meta property="og:type" content="website">
   <title>良心大考验</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23a78bfa'/%3E%3Cstop offset='1' stop-color='%23f5b942'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Cpath d='M32 50s-16-9.6-16-21a9 9 0 0 1 16-5.6A9 9 0 0 1 48 29c0 11.4-16 21-16 21z' fill='%23fff'/%3E%3C/svg%3E">
@@ -24,7 +24,6 @@
     <div class="aurora aurora--level3"></div>
     <div class="aurora aurora--level4"></div>
     <div class="aurora aurora--level5"></div>
-    <div class="aurora aurora--level6"></div>
     <div class="aurora aurora--win"></div>
     <div class="aurora aurora--end"></div>
     <div class="vignette"></div>
@@ -45,9 +44,9 @@
       </button>
 
       <div class="progress" role="group" data-aria="common.progressLabel">
-        <span class="progress__num"><b id="progNow">01</b><span class="progress__sep">/</span><span id="progTotal">06</span></span>
+        <span class="progress__num"><b id="progNow">01</b><span class="progress__sep">/</span><span id="progTotal">05</span></span>
         <span class="progress__track" aria-hidden="true" id="progressTrack">
-          <i class="progress__seg"></i><i class="progress__seg"></i><i class="progress__seg"></i><i class="progress__seg"></i><i class="progress__seg"></i><i class="progress__seg"></i>
+          <i class="progress__seg"></i><i class="progress__seg"></i><i class="progress__seg"></i><i class="progress__seg"></i><i class="progress__seg"></i>
         </span>
       </div>
 
@@ -60,7 +59,7 @@
     <!-- ========== 场景舞台 ========== -->
     <main class="stage" id="stage">
 
-      <!-- ---------- 第一关：勇气测试 ---------- -->
+      <!-- ---------- 第一关：资格认证（仪式感伪装） ---------- -->
       <section class="scene" id="scene-level1" data-scene="level1" aria-labelledby="q1">
         <div class="scene__inner">
           <div class="card card--l1" id="card1">
@@ -77,32 +76,31 @@
         </div>
       </section>
 
-      <!-- ---------- 第二关：诚实宣誓 ---------- -->
+      <!-- ---------- 第二关：现实洞察（考研人自律摸底） ---------- -->
       <section class="scene" id="scene-level2" data-scene="level2" aria-labelledby="q2">
         <div class="scene__inner">
           <div class="shake-wrap" id="shake2">
             <div class="card card--l2" id="card2">
               <span class="stage-tag stage-tag--mint" data-reveal="blur"><i class="stage-tag__dot"></i><span data-text="level2.stage"></span></span>
 
-              <!-- 良心检测小动画 -->
-              <div class="scan" id="scan2" data-reveal aria-live="polite">
-                <span class="scan__icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" width="16" height="16"><path d="M5 12.5l4.2 4.2L19 7" stroke="currentColor" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </span>
-                <span class="scan__text" id="scanText"></span>
-                <span class="scan__bar" aria-hidden="true"><i></i></span>
+              <div class="study-box" data-reveal aria-hidden="true">
+                <span class="study-icon">📚</span>
+                <span class="study-swap">⚡</span>
+                <span class="study-icon">📱</span>
               </div>
 
               <h2 class="question" id="q2"></h2>
-              <div class="answers answers--row">
-                <button class="answer answer--yes" id="btnYes" type="button" data-reveal>
+              <p class="hint" data-reveal data-text="level2.hint"></p>
+
+              <div class="answers answers--col">
+                <button class="answer answer--yes" id="btn2A" type="button" data-reveal>
                   <span class="answer__key" aria-hidden="true">A</span>
-                  <span class="answer__label" data-text="level2.answerYes"></span>
+                  <span class="answer__label" data-text="level2.answerA"></span>
                   <span class="answer__arrow" aria-hidden="true">›</span>
                 </button>
-                <button class="answer answer--maybe" id="btnHesitate" type="button" data-reveal>
+                <button class="answer answer--maybe" id="btn2B" type="button" data-reveal>
                   <span class="answer__key" aria-hidden="true">B</span>
-                  <span class="answer__label" data-text="level2.answerHesitate"></span>
+                  <span class="answer__label" data-text="level2.answerB"></span>
                   <span class="answer__arrow" aria-hidden="true">›</span>
                 </button>
               </div>
@@ -110,40 +108,41 @@
           </div>
         </div>
 
-        <!-- 犹豫提示卡 -->
-        <div class="modal" id="hesitateModal" hidden>
+        <!-- 盲目崇拜搞笑提示卡 -->
+        <div class="modal" id="studyModal" hidden>
           <div class="modal__backdrop" data-dismiss></div>
-          <div class="modal__panel modal__panel--tip" role="dialog" aria-modal="true" aria-labelledby="hesTitle" aria-describedby="hesText">
+          <div class="modal__panel modal__panel--tip" role="dialog" aria-modal="true" aria-labelledby="studyTitle" aria-describedby="studyText">
             <div class="modal__emoji" aria-hidden="true">
               <span class="modal__emoji-face">🤔</span>
               <span class="qbounce qbounce--1">?</span>
               <span class="qbounce qbounce--2">?</span>
               <span class="qbounce qbounce--3">?</span>
             </div>
-            <h3 class="modal__title" id="hesTitle" data-text="level2.hesitateTitle"></h3>
-            <p class="modal__text" id="hesText" data-text="level2.hesitateText"></p>
+            <h3 class="modal__title" id="studyTitle" data-text="level2.modalBTitle"></h3>
+            <p class="modal__text" id="studyText" data-text="level2.modalBText"></p>
             <div class="modal__actions">
-              <button class="btn btn--primary" id="btnHesOk" type="button" style="--n:0" data-text="level2.hesitateButton"></button>
+              <button class="btn btn--primary" id="btnStudyOk" type="button" style="--n:0" data-text="level2.modalBButton"></button>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- ---------- 第三关：认知与常识测试（新增：搞笑反骨） ---------- -->
+      <!-- ---------- 第三关：利益试探（500万 vs 调剂南极） ---------- -->
       <section class="scene" id="scene-level3" data-scene="level3" aria-labelledby="q3">
         <div class="scene__inner">
           <div class="card-flipper" id="flipper3">
             <div class="card card--l3" id="card3">
               <span class="stage-tag stage-tag--gold" data-reveal="blur"><i class="stage-tag__dot"></i><span data-text="level3.stage"></span></span>
               
-              <div class="sun-box" data-reveal aria-hidden="true">
-                <span class="sun-icon">☀️</span>
+              <div class="antarctica-box" data-reveal aria-hidden="true">
+                <span class="money-icon">💰</span>
+                <span class="penguin-icon">🐧</span>
               </div>
 
               <h2 class="question" id="q3"></h2>
               <p class="hint" data-reveal data-text="level3.hint"></p>
               
-              <div class="answers answers--row">
+              <div class="answers answers--col">
                 <button class="answer answer--gold" id="btn3A" type="button" data-reveal>
                   <span class="answer__key" aria-hidden="true">A</span>
                   <span class="answer__label" data-text="level3.answerA"></span>
@@ -159,75 +158,28 @@
           </div>
         </div>
 
-        <!-- 叛逆反骨提示卡 -->
-        <div class="modal" id="rebelModal" hidden>
+        <!-- 南极调剂弹窗 -->
+        <div class="modal" id="antarcticaModal" hidden>
           <div class="modal__backdrop" data-dismiss></div>
-          <div class="modal__panel modal__panel--tip" role="dialog" aria-modal="true" aria-labelledby="rebTitle" aria-describedby="rebText">
+          <div class="modal__panel modal__panel--tip" role="dialog" aria-modal="true" aria-labelledby="antTitle" aria-describedby="antText">
             <div class="modal__emoji" aria-hidden="true">
-              <span class="modal__emoji-face">🙃</span>
+              <span class="modal__emoji-face">🐧</span>
             </div>
-            <h3 class="modal__title" id="rebTitle" data-text="level3.modalBTitle"></h3>
-            <p class="modal__text" id="rebText" data-text="level3.modalBText"></p>
+            <h3 class="modal__title" id="antTitle" data-text="level3.modalATitle"></h3>
+            <p class="modal__text" id="antText" data-text="level3.modalAText"></p>
             <div class="modal__actions">
-              <button class="btn btn--gold" id="btnRebOk" type="button" style="--n:0" data-text="level3.modalBButton"></button>
+              <button class="btn btn--gold" id="btnAntOk" type="button" style="--n:0" data-text="level3.modalAButton"></button>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- ---------- 第四关：友情价值测试（新增：现实扎心幽默） ---------- -->
+      <!-- ---------- 第四关：绝密锁定（警报拉响，高潮蓄势） ---------- -->
       <section class="scene" id="scene-level4" data-scene="level4" aria-labelledby="q4">
         <div class="scene__inner">
           <div class="shake-wrap" id="shake4">
             <div class="card card--l4" id="card4">
-              <span class="stage-tag stage-tag--pink" data-reveal="blur"><i class="stage-tag__dot"></i><span data-text="level4.stage"></span></span>
-
-              <div class="money-box" data-reveal aria-hidden="true">
-                <span class="money-icon">💰</span>
-                <span class="money-sparkle">✨</span>
-              </div>
-
-              <h2 class="question" id="q4"></h2>
-              <p class="hint" data-reveal data-text="level4.hint"></p>
-
-              <div class="answers answers--col">
-                <button class="answer answer--gold" id="btn4A" type="button" data-reveal>
-                  <span class="answer__key" aria-hidden="true">A</span>
-                  <span class="answer__label" data-text="level4.answerA"></span>
-                  <span class="answer__arrow" aria-hidden="true">›</span>
-                </button>
-                <button class="answer answer--yes" id="btn4B" type="button" data-reveal>
-                  <span class="answer__key" aria-hidden="true">B</span>
-                  <span class="answer__label" data-text="level4.answerB"></span>
-                  <span class="answer__arrow" aria-hidden="true">›</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 见钱眼开弹窗 -->
-        <div class="modal" id="moneyModal" hidden>
-          <div class="modal__backdrop" data-dismiss></div>
-          <div class="modal__panel modal__panel--tip" role="dialog" aria-modal="true" aria-labelledby="monTitle" aria-describedby="monText">
-            <div class="modal__emoji" aria-hidden="true">
-              <span class="modal__emoji-face">💸</span>
-            </div>
-            <h3 class="modal__title" id="monTitle" data-text="level4.modalATitle"></h3>
-            <p class="modal__text" id="monText" data-text="level4.modalAText"></p>
-            <div class="modal__actions">
-              <button class="btn btn--primary" id="btnMonOk" type="button" style="--n:0" data-text="level4.modalAButton"></button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ---------- 第五关：极限防线测谎（新增：高潮前蓄势） ---------- -->
-      <section class="scene" id="scene-level5" data-scene="level5" aria-labelledby="q5">
-        <div class="scene__inner">
-          <div class="shake-wrap" id="shake5">
-            <div class="card card--l5" id="card5">
-              <span class="stage-tag stage-tag--red" data-reveal="blur"><i class="stage-tag__dot"></i><span data-text="level5.stage"></span></span>
+              <span class="stage-tag stage-tag--red" data-reveal="blur"><i class="stage-tag__dot"></i><span data-text="level4.stage"></span></span>
 
               <!-- 心率波形动效条 -->
               <div class="ecg-box" id="ecgBox" data-reveal aria-live="polite">
@@ -238,22 +190,22 @@
                 </div>
                 <div class="ecg-info">
                   <span class="ecg-heart">💓</span>
-                  <span class="ecg-rate" id="ecgRate" data-text="level5.pulseRate"></span>
+                  <span class="ecg-rate" id="ecgRate" data-text="level4.pulseRate"></span>
                 </div>
               </div>
 
-              <h2 class="question" id="q5"></h2>
-              <p class="hint" data-reveal data-text="level5.hint"></p>
+              <h2 class="question" id="q4"></h2>
+              <p class="hint" data-reveal data-text="level4.hint"></p>
 
-              <div class="answers answers--row">
-                <button class="answer answer--cool" id="btn5A" type="button" data-reveal>
+              <div class="answers answers--col">
+                <button class="answer answer--cool" id="btn4A" type="button" data-reveal>
                   <span class="answer__key" aria-hidden="true">A</span>
-                  <span class="answer__label" data-text="level5.answerA"></span>
+                  <span class="answer__label" data-text="level4.answerA"></span>
                   <span class="answer__arrow" aria-hidden="true">›</span>
                 </button>
-                <button class="answer answer--maybe" id="btn5B" type="button" data-reveal>
+                <button class="answer answer--maybe" id="btn4B" type="button" data-reveal>
                   <span class="answer__key" aria-hidden="true">B</span>
-                  <span class="answer__label" data-text="level5.answerB"></span>
+                  <span class="answer__label" data-text="level4.answerB"></span>
                   <span class="answer__arrow" aria-hidden="true">›</span>
                 </button>
               </div>
@@ -262,40 +214,40 @@
         </div>
       </section>
 
-      <!-- ---------- 第六关：终极考验（原第三关压轴） ---------- -->
-      <section class="scene scene--final" id="scene-level6" data-scene="level6" aria-labelledby="q6">
+      <!-- ---------- 第五关：终极考验（压轴大戏：烟花与陈九源上岸） ---------- -->
+      <section class="scene scene--final" id="scene-level5" data-scene="level5" aria-labelledby="q5">
         <!-- 开场文字 & 倒计时 -->
         <div class="intro" id="intro" aria-live="polite">
-          <p class="intro__text" data-text="level6.introText"></p>
+          <p class="intro__text" data-text="level5.introText"></p>
           <div class="intro__count" id="introCount" aria-hidden="true"></div>
         </div>
 
         <div class="scene__inner">
           <div class="final-wrap" id="finalWrap">
-            <div class="shake-wrap" id="shake6">
-              <div class="card card--final" id="card6">
-                <span class="stage-tag stage-tag--gold" data-reveal="blur"><i class="stage-tag__dot"></i><span data-text="level6.stage"></span></span>
-                <h2 class="question question--xl" id="q6"></h2>
+            <div class="shake-wrap" id="shake5">
+              <div class="card card--final" id="card5">
+                <span class="stage-tag stage-tag--gold" data-reveal="blur"><i class="stage-tag__dot"></i><span data-text="level5.stage"></span></span>
+                <h2 class="question question--xl" id="q5"></h2>
                 <div class="answers answers--row">
                   <button class="answer answer--gold" id="btnA" type="button" data-reveal>
                     <span class="answer__key" aria-hidden="true">A</span>
-                    <span class="answer__label" data-text="level6.answerA"></span>
+                    <span class="answer__label" data-text="level5.answerA"></span>
                     <span class="answer__arrow" aria-hidden="true">›</span>
                   </button>
                   <button class="answer answer--cool" id="btnB" type="button" data-reveal>
                     <span class="answer__key" aria-hidden="true">B</span>
-                    <span class="answer__label" data-text="level6.answerB"></span>
+                    <span class="answer__label" data-text="level5.answerB"></span>
                     <span class="answer__arrow" aria-hidden="true">›</span>
                   </button>
                 </div>
-                <p class="tap-tip" data-reveal data-text="level6.tapTip"></p>
+                <p class="tap-tip" data-reveal data-text="level5.tapTip"></p>
               </div>
             </div>
           </div>
         </div>
 
         <button class="skip-btn" id="btnSkip" type="button">
-          <span data-text="level6.skip"></span>
+          <span data-text="level5.skip"></span>
           <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M5 6l8 6-8 6V6zm9 0l8 6-8 6V6z"/></svg>
         </button>
 
@@ -424,7 +376,6 @@
           <circle class="confirm__circle" cx="60" cy="60" r="52"/>
           <path class="confirm__tick" d="M36 62l16 16 32-36"/>
         </svg>
-        <div class="stamp" aria-hidden="true"><span class="stamp__text" id="stampText"></span></div>
       </div>
       <p class="confirm__text" id="confirmText"></p>
     </div>

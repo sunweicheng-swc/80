@@ -126,15 +126,10 @@ body:not(.is-ready) .backdrop { opacity: 0; }
 }
 .aurora--level4 {
   background:
-    radial-gradient(38% 30% at 24% 32%, rgba(244, 114, 182, 0.28), transparent 70%),
-    radial-gradient(32% 28% at 76% 64%, rgba(139, 92, 246, 0.30), transparent 70%);
-}
-.aurora--level5 {
-  background:
     radial-gradient(40% 32% at 30% 34%, rgba(248, 113, 113, 0.32), transparent 70%),
     radial-gradient(36% 30% at 72% 66%, rgba(245, 165, 36, 0.24), transparent 70%);
 }
-.aurora--level6 {
+.aurora--level5 {
   background:
     radial-gradient(70% 30% at 50% 108%, rgba(124, 58, 237, 0.30), transparent 70%),
     radial-gradient(30% 22% at 20% 18%, rgba(30, 64, 175, 0.20), transparent 70%),
@@ -158,7 +153,6 @@ body[data-scene="level2"] .aurora--level2,
 body[data-scene="level3"] .aurora--level3,
 body[data-scene="level4"] .aurora--level4,
 body[data-scene="level5"] .aurora--level5,
-body[data-scene="level6"] .aurora--level6,
 body[data-scene="win"] .aurora--win,
 body[data-scene="end"] .aurora--end { opacity: 1; }
 
@@ -168,7 +162,7 @@ body[data-scene="end"] .aurora--end { opacity: 1; }
   background: radial-gradient(120% 90% at 50% 45%, transparent 55%, rgba(0, 0, 0, 0.55) 100%);
   transition: background 1.2s ease;
 }
-body[data-scene="level6"] .vignette {
+body[data-scene="level5"] .vignette {
   background: radial-gradient(120% 90% at 50% 45%, rgba(0, 0, 0, 0.25) 30%, rgba(0, 0, 0, 0.75) 100%);
 }
 
@@ -656,38 +650,27 @@ body.is-ready .footnote { opacity: 0.8; }
 .card--l1 { padding-bottom: clamp(28px, 6vw, 42px); }
 .card.is-exit { transform: translateY(-40px) scale(0.9); opacity: 0; transition: transform 0.5s var(--ease-out), opacity 0.4s ease; }
 
-/* L2: 扫描条 */
-.scan {
+/* L2: 学习与手机摸底 */
+.study-box {
   display: flex;
   align-items: center;
-  gap: 10px;
-  width: min(320px, 100%);
-  margin: 16px auto 0;
-  padding: 8px 14px;
-  border-radius: 14px;
-  background: rgba(0, 0, 0, 0.22);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  font-size: 13px;
-  color: var(--ink-2);
-  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin: 12px auto 0;
+  width: max-content;
 }
-.scan__icon {
-  width: 20px; height: 20px;
-  border-radius: 50%;
-  border: 2px solid rgba(52, 211, 153, 0.25);
-  border-top-color: var(--mint);
-  display: grid; place-items: center;
-  animation: spin 0.8s linear infinite;
+.study-icon {
+  font-size: 32px;
+  animation: coinBob 2.2s ease-in-out infinite;
+  display: inline-block;
 }
-.scan__text { flex: 1; text-align: left; white-space: nowrap; }
-.scan__bar { flex-basis: 100%; height: 3px; border-radius: 3px; background: rgba(255, 255, 255, 0.1); overflow: hidden; }
-.scan__bar i { display: block; height: 100%; background: linear-gradient(90deg, var(--mint), var(--gold)); transform: scaleX(0); transform-origin: left; }
-.scan.is-scanning .scan__bar i { animation: scanFill 1.1s var(--ease-out) forwards; }
-.scan.is-done .scan__icon { animation: popIn 0.4s var(--ease-spring); border-color: transparent; background: var(--mint); color: #053323; }
-.scan.is-done .scan__text { color: #b7f5dc; }
-.scan.is-done .scan__bar i { transform: scaleX(1); animation: none; }
+.study-swap {
+  font-size: 18px;
+  color: var(--gold);
+  animation: twinkle 1.5s ease-in-out infinite;
+}
 
-/* L3: 太阳与3D翻转 */
+/* L3: 500万与南极企鹅翻转 */
 .card-flipper {
   width: min(560px, 100%);
   perspective: 1000px;
@@ -696,26 +679,21 @@ body.is-ready .footnote { opacity: 0.8; }
 .card-flipper.is-flipped {
   transform: rotateZ(180deg) scale(0.95);
 }
-.sun-box {
+.antarctica-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
   margin: 10px auto 0;
-  width: 52px; height: 52px;
-  border-radius: 50%;
-  display: grid; place-items: center;
-  background: radial-gradient(circle, rgba(255, 210, 122, 0.25), transparent 70%);
+  width: max-content;
 }
-.sun-icon { font-size: 32px; animation: sunFloat 3s ease-in-out infinite; display: inline-block; }
-
-/* L4: 金币盒子 */
-.money-box {
-  position: relative;
-  width: 56px; height: 56px;
-  margin: 10px auto 0;
-  display: grid; place-items: center;
+.penguin-icon {
+  font-size: 34px;
+  animation: sway 2.4s ease-in-out infinite;
+  display: inline-block;
 }
-.money-icon { font-size: 34px; animation: coinBob 2s ease-in-out infinite; }
-.money-sparkle { position: absolute; top: -2px; right: 2px; font-size: 16px; animation: twinkle 1.5s infinite; }
 
-/* L5: 心电图与警报 */
+/* L4: 心电图与警报 */
 .ecg-box {
   width: min(340px, 100%);
   margin: 14px auto 0;

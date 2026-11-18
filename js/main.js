@@ -1,19 +1,18 @@
 /**
  * ============================================================
- *  main.js —— 《良心大考验》（6 关升级版）流程控制
+ *  main.js —— 《良心大考验》（5 关黄金节奏版）流程控制
  * ------------------------------------------------------------
  *  结构：
  *   1. 工具函数 & 场景作用域定时器
  *   2. 文案注入与题目拆解（读取 js/config.js）
  *   3. 通用 UI：提示条、确认动画、弹窗、光波
- *   4. 六大关卡场景控制：
- *      - Level 1：勇气测试
- *      - Level 2：诚实宣誓（印章/犹豫提示）
- *      - Level 3：常识测试（正常金币 / 翻转180度反骨提示）
- *      - Level 4：友情测试（真实见钱眼开金币雨 / 义薄云天光环）
- *      - Level 5：测谎防线（心率飙升/警报锁死）
- *      - Level 6：终极考验（Canvas 烟花开场，温晓健是不是混蛋？）
- *   5. 路由管理与状态机（URL Hash ↔ #level1 ~ #level6 / win / end）
+ *   4. 五大关卡场景控制：
+ *      - Level 1：资格认证（仪式感伪装，呼吸按钮）
+ *      - Level 2：现实洞察（考研人自律摸底，书本手机交替）
+ *      - Level 3：利益试探（500万 vs 调剂南极，金币雨与180°翻转）
+ *      - Level 4：绝密锁定（心率飙升报警，高潮前蓄水）
+ *      - Level 5：终极考验（Canvas 烟花开场秀，陈九源能不能考研上岸？）
+ *   5. 路由管理与状态机（URL Hash ↔ #level1 ~ #level5 / win / end）
  *   6. 声音控制与彩蛋
  * ============================================================
  */
@@ -70,10 +69,9 @@
     document.title = fmt(C.pageTitle);
     $$('[data-text]').forEach((el) => { el.textContent = fmt(get(el.dataset.text)); });
     $$('[data-aria]').forEach((el) => { el.setAttribute('aria-label', fmt(get(el.dataset.aria))); });
-    $('#stampText').textContent = C.level2.stampText;
     $('#scoreMax').textContent = C.win.scoreMax;
     $('#thinkEmoji').textContent = C.nudge.emoji;
-    $('#progTotal').textContent = '0' + (C.common.totalLevels || 6);
+    $('#progTotal').textContent = '0' + (C.common.totalLevels || 5);
   }
 
   function renderQuestion(el, template) {
@@ -258,12 +256,12 @@
     current: null,
     busy: false,
     introSeen: false,
-    l6Phase: 'idle'
+    l5Phase: 'idle'
   };
 
   const lock = (card, on) => { state.busy = on; card.classList.toggle('is-locked', on); };
 
-  /* ---------- 第一关：勇气测试 ---------- */
+  /* ---------- 第一关：资格认证 ---------- */
   const L1 = {
     el: $('#scene-level1'),
     card: $('#card1'),
@@ -298,98 +296,27 @@
   };
   onTap(L1.btn, () => L1.pass());
 
-  /* ---------- 第二关：诚实宣誓 ---------- */
+  /* ---------- 第二关：现实洞察 ---------- */
   const L2 = {
     el: $('#scene-level2'),
     card: $('#card2'),
     shake: $('#shake2'),
     q: $('#q2'),
-    scan: $('#scan2'),
-    btnYes: $('#btnYes'),
-    btnHes: $('#btnHesitate'),
-    modal: $('#hesitateModal'),
+    btnA: $('#btn2A'),
+    btnB: $('#btn2B'),
+    modal: $('#studyModal'),
     enter() {
       lock(this.card, false);
-      this.btnYes.classList.remove('is-chosen');
+      this.btnA.classList.remove('is-chosen');
+      this.btnB.classList.remove('is-chosen');
       this.shake.classList.remove('is-shaking');
       resetReveal(this.el);
       FX.clear();
       FX.setAmbient({ stars: true, starAlpha: 0.85, motes: true, moteHue: 160, shooting: false, sparse: false });
 
       const n = renderQuestion(this.q, C.level2.question);
-      this.scan.classList.remove('is-scanning', 'is-done');
-      $('#scanText').textContent = C.level2.scanning;
-
       later(() => reveal($('.stage-tag', this.el)), T(180));
-      later(() => { reveal(this.scan); this.scan.classList.add('is-scanning'); }, T(350));
-      later(() => {
-        this.scan.classList.add('is-done');
-        $('#scanText').textContent = C.level2.scanned;
-        Sound.play('tick');
-      }, T(1450));
-      later(() => this.q.classList.add('is-typing'), T(1650));
-      const done = T(1650) + (reduceMotion ? 180 : typeDuration(n));
-      later(() => reveal(this.btnYes), done);
-      later(() => reveal(this.btnHes), done + T(120));
-    },
-    yes() {
-      if (state.busy) return;
-      lock(this.card, true);
-      this.btnYes.classList.add('is-chosen');
-      Sound.play('click');
-      const c = centerOf(this.btnYes);
-      spawnRing(c.x, c.y, 'mint');
-      FX.sparkle(c.x, c.y, { count: 30, hues: [150, 44, 170], speed: 4.2 });
-      later(() => { showConfirm({ tone: 'mint', stamp: true, text: C.level2.signedToast }); Sound.play('success'); }, T(280));
-      later(() => Sound.play('stamp'), T(1200));
-      later(() => hideConfirm(), T(2200));
-      later(() => go('level3'), T(2400));
-    },
-    hesitate() {
-      if (state.busy) return;
-      state.busy = true;
-      Sound.play('boing');
-      this.shake.classList.remove('is-shaking');
-      reflow(this.shake);
-      this.shake.classList.add('is-shaking');
-      later(() => {
-        state.busy = false;
-        Modal.open(this.modal, {
-          onDismiss: () => this.closeTip(),
-          returnFocus: this.btnHes,
-          inertTarget: this.shake
-        });
-      }, T(420));
-    },
-    closeTip() {
-      Modal.close(this.modal);
-    }
-  };
-  onTap(L2.btnYes, () => L2.yes());
-  onTap(L2.btnHes, () => L2.hesitate());
-  onTap($('#btnHesOk'), () => L2.closeTip(), 300);
-
-  /* ---------- 第三关：认知与常识测试（新增） ---------- */
-  const L3 = {
-    el: $('#scene-level3'),
-    flipper: $('#flipper3'),
-    card: $('#card3'),
-    q: $('#q3'),
-    btnA: $('#btn3A'),
-    btnB: $('#btn3B'),
-    modal: $('#rebelModal'),
-    enter() {
-      lock(this.card, false);
-      this.flipper.classList.remove('is-flipped');
-      this.btnA.classList.remove('is-chosen');
-      this.btnB.classList.remove('is-chosen');
-      resetReveal(this.el);
-      FX.clear();
-      FX.setAmbient({ stars: true, starAlpha: 0.8, motes: true, moteHue: 45, shooting: false, sparse: false });
-
-      const n = renderQuestion(this.q, C.level3.question);
-      later(() => reveal($('.stage-tag', this.el)), T(180));
-      later(() => reveal($('.sun-box', this.el)), T(320));
+      later(() => reveal($('.study-box', this.el)), T(300));
       later(() => this.q.classList.add('is-typing'), T(500));
       const done = T(500) + (reduceMotion ? 180 : typeDuration(n));
       later(() => reveal($('.hint', this.el)), done);
@@ -402,59 +329,61 @@
       this.btnA.classList.add('is-chosen');
       Sound.play('coin');
       const c = centerOf(this.btnA);
-      FX.sparkle(c.x, c.y, { count: 32, hues: [45, 55, 30], speed: 4.5 });
+      spawnRing(c.x, c.y, 'mint');
+      FX.sparkle(c.x, c.y, { count: 32, hues: [150, 44, 170], speed: 4.2 });
       later(() => {
-        showToast(C.level3.toastA, 1400);
+        showToast(C.level2.toastA, 1400);
         Sound.play('success');
       }, T(200));
-      later(() => go('level4'), T(1500));
+      later(() => go('level3'), T(1500));
     },
     chooseB() {
       if (state.busy) return;
       state.busy = true;
       this.btnB.classList.add('is-chosen');
-      Sound.play('whoop');
-      // 颠倒翻转 180 度反差动效
-      this.flipper.classList.add('is-flipped');
+      Sound.play('boing');
+      this.shake.classList.remove('is-shaking');
+      reflow(this.shake);
+      this.shake.classList.add('is-shaking');
       later(() => {
-        Sound.play('boing');
+        state.busy = false;
         Modal.open(this.modal, {
           onDismiss: () => this.passB(),
           returnFocus: this.btnB,
-          inertTarget: this.flipper
+          inertTarget: this.shake
         });
-      }, T(700));
+      }, T(450));
     },
     passB() {
       Modal.close(this.modal);
-      this.flipper.classList.remove('is-flipped');
-      later(() => go('level4'), T(450));
+      later(() => go('level3'), T(350));
     }
   };
-  onTap(L3.btnA, () => L3.chooseA());
-  onTap(L3.btnB, () => L3.chooseB());
-  onTap($('#btnRebOk'), () => L3.passB(), 300);
+  onTap(L2.btnA, () => L2.chooseA());
+  onTap(L2.btnB, () => L2.chooseB());
+  onTap($('#btnStudyOk'), () => L2.passB(), 300);
 
-  /* ---------- 第四关：友情价值测试（新增） ---------- */
-  const L4 = {
-    el: $('#scene-level4'),
-    card: $('#card4'),
-    shake: $('#shake4'),
-    q: $('#q4'),
-    btnA: $('#btn4A'),
-    btnB: $('#btn4B'),
-    modal: $('#moneyModal'),
+  /* ---------- 第三关：利益试探（500万 vs 调剂南极） ---------- */
+  const L3 = {
+    el: $('#scene-level3'),
+    flipper: $('#flipper3'),
+    card: $('#card3'),
+    q: $('#q3'),
+    btnA: $('#btn3A'),
+    btnB: $('#btn3B'),
+    modal: $('#antarcticaModal'),
     enter() {
       lock(this.card, false);
+      this.flipper.classList.remove('is-flipped');
       this.btnA.classList.remove('is-chosen');
       this.btnB.classList.remove('is-chosen');
       resetReveal(this.el);
       FX.clear();
-      FX.setAmbient({ stars: true, starAlpha: 0.8, motes: true, moteHue: 330, shooting: false, sparse: false });
+      FX.setAmbient({ stars: true, starAlpha: 0.8, motes: true, moteHue: 45, shooting: false, sparse: false });
 
-      const n = renderQuestion(this.q, C.level4.question);
+      const n = renderQuestion(this.q, C.level3.question);
       later(() => reveal($('.stage-tag', this.el)), T(180));
-      later(() => reveal($('.money-box', this.el)), T(300));
+      later(() => reveal($('.antarctica-box', this.el)), T(300));
       later(() => this.q.classList.add('is-typing'), T(500));
       const done = T(500) + (reduceMotion ? 180 : typeDuration(n));
       later(() => reveal($('.hint', this.el)), done);
@@ -466,20 +395,22 @@
       state.busy = true;
       this.btnA.classList.add('is-chosen');
       Sound.play('coin');
-      // 漫天飘洒金币/金黄纸屑
-      FX.confetti(60, { spread: 0.4 });
+      FX.confetti(70, { spread: 0.5 });
+      this.flipper.classList.add('is-flipped');
+      Sound.play('whoop');
       later(() => {
         Sound.play('boing');
         Modal.open(this.modal, {
           onDismiss: () => this.passA(),
           returnFocus: this.btnA,
-          inertTarget: this.shake
+          inertTarget: this.flipper
         });
-      }, T(600));
+      }, T(650));
     },
     passA() {
       Modal.close(this.modal);
-      later(() => go('level5'), T(450));
+      this.flipper.classList.remove('is-flipped');
+      later(() => go('level4'), T(450));
     },
     chooseB() {
       if (state.busy) return;
@@ -490,38 +421,38 @@
       spawnRing(c.x, c.y, 'mint');
       FX.sparkle(c.x, c.y, { count: 35, hues: [330, 280, 150], speed: 4 });
       later(() => {
-        showToast(C.level4.toastB, 1500);
+        showToast(C.level3.toastB, 1500);
         Sound.play('success');
       }, T(200));
-      later(() => go('level5'), T(1600));
+      later(() => go('level4'), T(1600));
     }
   };
-  onTap(L4.btnA, () => L4.chooseA());
-  onTap(L4.btnB, () => L4.chooseB());
-  onTap($('#btnMonOk'), () => L4.passA(), 300);
+  onTap(L3.btnA, () => L3.chooseA());
+  onTap(L3.btnB, () => L3.chooseB());
+  onTap($('#btnAntOk'), () => L3.passA(), 300);
 
-  /* ---------- 第五关：极限防线测谎（新增） ---------- */
-  const L5 = {
-    el: $('#scene-level5'),
-    card: $('#card5'),
-    shake: $('#shake5'),
-    q: $('#q5'),
+  /* ---------- 第四关：绝密锁定（警报拉响，高潮蓄势） ---------- */
+  const L4 = {
+    el: $('#scene-level4'),
+    card: $('#card4'),
+    shake: $('#shake4'),
+    q: $('#q4'),
     ecgBox: $('#ecgBox'),
     ecgRate: $('#ecgRate'),
-    btnA: $('#btn5A'),
-    btnB: $('#btn5B'),
+    btnA: $('#btn4A'),
+    btnB: $('#btn4B'),
     enter() {
       lock(this.card, false);
       this.shake.classList.remove('is-shaking');
       this.ecgBox.classList.remove('is-spiking');
       this.btnA.classList.remove('is-chosen');
       this.btnB.classList.remove('is-chosen');
-      this.ecgRate.textContent = C.level5.pulseRate;
+      this.ecgRate.textContent = C.level4.pulseRate;
       resetReveal(this.el);
       FX.clear();
       FX.setAmbient({ stars: true, starAlpha: 0.9, motes: true, moteHue: 0, shooting: true, sparse: false });
 
-      const n = renderQuestion(this.q, C.level5.question);
+      const n = renderQuestion(this.q, C.level4.question);
       later(() => reveal($('.stage-tag', this.el)), T(180));
       later(() => reveal(this.ecgBox), T(300));
       later(() => this.q.classList.add('is-typing'), T(500));
@@ -536,34 +467,34 @@
       Sound.play('heartbeat');
       later(() => Sound.play('alarm'), 200);
       this.ecgBox.classList.add('is-spiking');
-      this.ecgRate.textContent = C.level5.pulseSpike;
+      this.ecgRate.textContent = C.level4.pulseSpike;
       this.shake.classList.add('is-shaking');
       const c = centerOf(this.card);
       spawnRing(c.x, c.y, 'gold');
       later(() => showToast(toastText, 1800), T(300));
-      later(() => go('level6'), T(1900));
+      later(() => go('level5'), T(1900));
     },
     chooseA() {
       this.btnA.classList.add('is-chosen');
-      this.spikeAndProceed(C.level5.toastA);
+      this.spikeAndProceed(C.level4.toastA);
     },
     chooseB() {
       this.btnB.classList.add('is-chosen');
-      this.spikeAndProceed(C.level5.toastB);
+      this.spikeAndProceed(C.level4.toastB);
     }
   };
-  onTap(L5.btnA, () => L5.chooseA());
-  onTap(L5.btnB, () => L5.chooseB());
+  onTap(L4.btnA, () => L4.chooseA());
+  onTap(L4.btnB, () => L4.chooseB());
 
-  /* ---------- 第六关：终极考验（原第三关压轴） ---------- */
-  const L6 = {
-    el: $('#scene-level6'),
+  /* ---------- 第五关：终极考验（压轴：烟花与陈九源上岸） ---------- */
+  const L5 = {
+    el: $('#scene-level5'),
     intro: $('#intro'),
     count: $('#introCount'),
     wrap: $('#finalWrap'),
-    shake: $('#shake6'),
-    card: $('#card6'),
-    q: $('#q6'),
+    shake: $('#shake5'),
+    card: $('#card5'),
+    q: $('#q5'),
     btnA: $('#btnA'),
     btnB: $('#btnB'),
     skip: $('#btnSkip'),
@@ -592,7 +523,7 @@
         this.showQuestion(true);
         return;
       }
-      state.l6Phase = 'intro';
+      state.l5Phase = 'intro';
 
       later(() => this.skip.classList.add('is-in'), T(500));
       later(() => this.intro.classList.add('is-text'), T(350));
@@ -619,8 +550,8 @@
     },
 
     showQuestion(instant) {
-      if (state.l6Phase === 'question') return;
-      state.l6Phase = 'question';
+      if (state.l5Phase === 'question') return;
+      state.l5Phase = 'question';
       state.introSeen = true;
       this.intro.classList.add('is-hidden');
       this.skip.classList.remove('is-in');
@@ -629,7 +560,7 @@
 
       FX.setAmbient({ stars: true, starAlpha: 1, sparse: true });
 
-      const n = renderQuestion(this.q, C.level6.question);
+      const n = renderQuestion(this.q, C.level5.question);
       const d = instant ? 0.4 : 1;
       later(() => this.wrap.classList.add('is-in'), T(120 * d));
       later(() => reveal($('.stage-tag', this.el)), T(450 * d));
@@ -641,14 +572,14 @@
     },
 
     skipIntro() {
-      if (state.l6Phase !== 'intro') return;
+      if (state.l5Phase !== 'intro') return;
       Timers.clear();
       FX.stopShow();
       this.showQuestion();
     },
 
     chooseA() {
-      if (state.busy || state.l6Phase !== 'question') return;
+      if (state.busy || state.l5Phase !== 'question') return;
       lock(this.card, true);
       this.btnA.classList.add('is-chosen');
       this.shake.classList.add('is-pulse');
@@ -667,7 +598,7 @@
     },
 
     chooseB() {
-      if (state.busy || state.l6Phase !== 'question') return;
+      if (state.busy || state.l5Phase !== 'question') return;
       lock(this.card, true);
       this.btnB.classList.add('is-sunk');
       Sound.play('boing');
@@ -718,11 +649,11 @@
       go('end');
     }
   };
-  onTap(L6.skip, () => L6.skipIntro());
-  onTap(L6.btnA, () => L6.chooseA());
-  onTap(L6.btnB, () => L6.chooseB());
-  onTap($('#btnReconsider'), () => L6.reconsider());
-  onTap($('#btnInsist'), () => L6.insist());
+  onTap(L5.skip, () => L5.skipIntro());
+  onTap(L5.btnA, () => L5.chooseA());
+  onTap(L5.btnB, () => L5.chooseB());
+  onTap($('#btnReconsider'), () => L5.reconsider());
+  onTap($('#btnInsist'), () => L5.insist());
 
   /* ---------- 结局 A：奖励 ---------- */
   const WIN = {
@@ -787,8 +718,8 @@
 
   /* ======================== 5. 路由与状态机 ======================== */
 
-  const SCENES = { level1: L1, level2: L2, level3: L3, level4: L4, level5: L5, level6: L6, win: WIN, end: END };
-  const PROGRESS = { level1: 1, level2: 2, level3: 3, level4: 4, level5: 5, level6: 6, win: 6, end: 6 };
+  const SCENES = { level1: L1, level2: L2, level3: L3, level4: L4, level5: L5, win: WIN, end: END };
+  const PROGRESS = { level1: 1, level2: 2, level3: 3, level4: 4, level5: 5, win: 5, end: 5 };
   const segs = $$('.progress__seg');
 
   function updateProgress(name) {
@@ -812,7 +743,7 @@
     confirmBox.className = 'confirm';
     $$('.ring', overlay).forEach((r) => r.remove());
     state.busy = false;
-    state.l6Phase = 'idle';
+    state.l5Phase = 'idle';
 
     const prev = state.current && SCENES[state.current];
     if (prev) {
@@ -905,7 +836,7 @@
     }
   });
 
-  [L6.el, WIN.el].forEach((sceneEl) => {
+  [L5.el, WIN.el].forEach((sceneEl) => {
     sceneEl.addEventListener('pointerdown', (e) => {
       if (e.button != null && e.button !== 0) return;
       if (e.target.closest('button, .card, .modal, .medal-wrap, .skip-btn')) return;
