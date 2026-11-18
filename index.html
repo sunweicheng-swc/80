@@ -25,6 +25,8 @@
     <div class="aurora aurora--level4"></div>
     <div class="aurora aurora--level5"></div>
     <div class="aurora aurora--win"></div>
+    <div class="aurora aurora--zen"></div>
+    <div class="aurora aurora--tycoon"></div>
     <div class="aurora aurora--end"></div>
     <div class="vignette"></div>
   </div>
@@ -239,9 +241,14 @@
                     <span class="answer__label answer__label--bold" data-text="level5.answerA"></span>
                     <span class="answer__arrow" aria-hidden="true">›</span>
                   </button>
-                  <button class="answer answer--cool answer--epic" id="btnB" type="button" data-reveal>
-                    <span class="answer__key" aria-hidden="true">📖</span>
-                    <span class="answer__label" data-text="level5.answerB"></span>
+                  <button class="answer answer--purple answer--epic" id="btnB" type="button" data-reveal>
+                    <span class="answer__key answer__key--zen" aria-hidden="true">🧘</span>
+                    <span class="answer__label answer__label--bold" data-text="level5.answerB"></span>
+                    <span class="answer__arrow" aria-hidden="true">›</span>
+                  </button>
+                  <button class="answer answer--green answer--epic" id="btnC" type="button" data-reveal>
+                    <span class="answer__key answer__key--cash" aria-hidden="true">👑</span>
+                    <span class="answer__label answer__label--bold" data-text="level5.answerC"></span>
                     <span class="answer__arrow" aria-hidden="true">›</span>
                   </button>
                 </div>
@@ -349,7 +356,100 @@
         </div>
       </section>
 
-      <!-- ---------- 结局 B：坚持己见（反向毒奶） ---------- -->
+      <!-- ---------- 结局 B：赛博祈福 · 功德无量法会 ---------- -->
+      <section class="scene scene--zen" id="scene-zen" data-scene="zen" aria-labelledby="zenTitle">
+        <div class="scene__inner">
+          <div class="zen-wrap" id="zenWrap">
+            <div class="card card--reward card--zen">
+              <!-- 禅意印章 -->
+              <div class="admission-seal seal--zen" aria-hidden="true">
+                <span class="seal-inner">功德圆满</span>
+              </div>
+
+              <h2 class="reward__title reward__title--zen" id="zenTitle" data-text="zen.title" style="--n:0"></h2>
+              <p class="reward__sub reward__sub--zen" data-text="zen.subtitle" style="--n:1"></p>
+              <div class="reward__badge reward__badge--zen" style="--n:2"><span data-text="zen.badge"></span></div>
+
+              <!-- 赛博木鱼核心交互区 -->
+              <div class="wooden-fish-box" style="--n:3">
+                <button class="wooden-fish-btn" id="btnWoodenFish" type="button" aria-label="敲木鱼祈福">
+                  <span class="wooden-fish-icon">🪵</span>
+                  <span class="wooden-fish-halo" aria-hidden="true"></span>
+                </button>
+                <div class="wooden-fish-stats">
+                  <p class="merit-tip" data-text="zen.meritTip"></p>
+                  <div class="merit-counter">
+                    已为陈九源累计祈福：<b id="zenCountNum">1</b> 次 ｜ 功德池：<b id="zenMeritPool">+100</b>
+                  </div>
+                </div>
+                <!-- 动态漂浮的功德粒子容器 -->
+                <div class="merit-float-stage" id="meritStage" aria-hidden="true"></div>
+              </div>
+
+              <div class="score score--zen" style="--n:4">
+                <span class="score__label" data-text="zen.scoreLabel"></span>
+                <span class="score__value"><b class="score__num" id="zenScoreNum">88.8</b><span class="score__max">%</span></span>
+                <span class="score__bar score__bar--zen" aria-hidden="true"><i id="zenScoreBar" style="transform: scaleX(0.888)"></i></span>
+              </div>
+
+              <p class="reward__quip reward__quip--zen" data-text="zen.quip" style="--n:5"></p>
+
+              <div class="actions" style="--n:6">
+                <button class="btn btn--gold" id="btnStrikeZen" type="button">
+                  <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 2v20M2 12h20" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>
+                  <span data-text="zen.strikeBtn"></span>
+                </button>
+                <button class="btn btn--ghost" id="btnReplayZen" type="button">
+                  <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4.5h4.5" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  <span data-text="zen.replay"></span>
+                </button>
+              </div>
+              <p class="reward__note" data-text="zen.note" style="--n:7"></p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ---------- 结局 C：降维打击 · 华尔街杰出校董 ---------- -->
+      <section class="scene scene--tycoon" id="scene-tycoon" data-scene="tycoon" aria-labelledby="tycoonTitle">
+        <div class="scene__inner">
+          <div class="tycoon-wrap" id="tycoonWrap">
+            <div class="card card--reward card--tycoon">
+              <!-- 校董红印章 -->
+              <div class="admission-seal seal--tycoon" aria-hidden="true">
+                <span class="seal-inner">特批免试</span>
+              </div>
+
+              <h2 class="reward__title reward__title--tycoon" id="tycoonTitle" data-text="tycoon.title" style="--n:0"></h2>
+              <p class="reward__sub reward__sub--tycoon" data-text="tycoon.subtitle" style="--n:1"></p>
+              <div class="reward__badge reward__badge--tycoon" style="--n:2"><span data-text="tycoon.badge"></span></div>
+
+              <!-- 财阀身价估值 -->
+              <div class="score score--tycoon" style="--n:3">
+                <span class="score__label" data-text="tycoon.scoreLabel"></span>
+                <span class="score__value"><b class="score__num" id="tycoonScoreNum">999</b><span class="score__max">%</span></span>
+                <span class="score__bar score__bar--tycoon" aria-hidden="true"><i id="tycoonScoreBar" style="transform: scaleX(1)"></i></span>
+              </div>
+
+              <p class="reward__quip reward__quip--tycoon" data-text="tycoon.quip" style="--n:4"></p>
+
+              <div class="actions" style="--n:5">
+                <button class="btn btn--gold" id="btnTycoonRain" type="button">
+                  <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg>
+                  <span data-text="tycoon.rainBtn"></span>
+                </button>
+                <button class="btn btn--ghost" id="btnReplayTycoon" type="button">
+                  <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4.5h4.5" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  <span data-text="tycoon.replay"></span>
+                </button>
+              </div>
+              <p class="reward__note" data-text="tycoon.note" style="--n:6"></p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ---------- 备用结局（坚持己见） ---------- -->
       <section class="scene scene--end" id="scene-end" data-scene="end" aria-labelledby="endTitle">
         <div class="scene__inner">
           <div class="card card--end">

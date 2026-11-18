@@ -69,8 +69,8 @@
     document.title = fmt(C.pageTitle);
     $$('[data-text]').forEach((el) => { el.textContent = fmt(get(el.dataset.text)); });
     $$('[data-aria]').forEach((el) => { el.setAttribute('aria-label', fmt(get(el.dataset.aria))); });
-    $('#scoreMax').textContent = C.win.scoreMax;
-    $('#thinkEmoji').textContent = C.nudge.emoji;
+    const sm = $('#scoreMax'); if (sm && C.win) sm.textContent = C.win.scoreMax;
+    const te = $('#thinkEmoji'); if (te && C.nudge) te.textContent = C.nudge.emoji;
     $('#progTotal').textContent = '0' + (C.common.totalLevels || 5);
   }
 
@@ -486,7 +486,7 @@
   onTap(L4.btnA, () => L4.chooseA());
   onTap(L4.btnB, () => L4.chooseB());
 
-  /* ---------- 第五关：终极考验（压轴：烟花与陈九源上岸） ---------- */
+  /* ---------- 第五关：终极考验（压轴：烟花与天命启示录） ---------- */
   const L5 = {
     el: $('#scene-level5'),
     intro: $('#intro'),
@@ -497,6 +497,7 @@
     q: $('#q5'),
     btnA: $('#btnA'),
     btnB: $('#btnB'),
+    btnC: $('#btnC'),
     skip: $('#btnSkip'),
     emoji: $('#thinkEmoji'),
     qmarks: $('#qmarks'),
@@ -508,11 +509,12 @@
       this.wrap.classList.remove('is-in');
       this.shake.classList.remove('is-shaking', 'is-pulse');
       this.btnA.classList.remove('is-chosen');
-      this.btnB.classList.remove('is-sunk');
+      this.btnB.classList.remove('is-chosen');
+      this.btnC.classList.remove('is-chosen');
       this.intro.className = 'intro';
       this.count.innerHTML = '';
-      this.emoji.className = 'big-emoji';
-      this.qmarks.innerHTML = '';
+      if (this.emoji) this.emoji.className = 'big-emoji';
+      if (this.qmarks) this.qmarks.innerHTML = '';
       this.skip.classList.remove('is-in');
       this.wrap.inert = true;
 
@@ -567,9 +569,10 @@
       later(() => this.q.classList.add('is-typing'), T(650 * d));
       const done = T(650 * d) + (reduceMotion ? 180 : typeDuration(n) * (instant ? 0.6 : 1));
       later(() => reveal($('#q5Sub')), done);
-      later(() => reveal(this.btnA), done + T(120));
-      later(() => reveal(this.btnB), done + T(240));
-      later(() => reveal($('.tap-tip', this.el)), done + T(700));
+      later(() => reveal(this.btnA), done + T(100));
+      later(() => reveal(this.btnB), done + T(220));
+      later(() => reveal(this.btnC), done + T(340));
+      later(() => reveal($('.tap-tip', this.el)), done + T(750));
     },
 
     skipIntro() {
@@ -601,62 +604,56 @@
     chooseB() {
       if (state.busy || state.l5Phase !== 'question') return;
       lock(this.card, true);
-      this.btnB.classList.add('is-sunk');
-      Sound.play('boing');
-      this.shake.classList.remove('is-shaking');
-      reflow(this.shake);
-      this.shake.classList.add('is-shaking');
-      this.spawnQmarks();
+      this.btnB.classList.add('is-chosen');
+      this.shake.classList.add('is-pulse');
+      Sound.play('woodenfish');
+      const c = centerOf(this.card);
+      const b = centerOf(this.btnB);
+      FX.sparkle(b.x, b.y, { count: 28, hues: [272, 285, 44], speed: 4.0 });
       later(() => {
-        this.emoji.className = 'big-emoji';
-        reflow(this.emoji);
-        this.emoji.classList.add('is-on');
-      }, T(320));
-      later(() => {
-        this.emoji.classList.add('is-off');
-        Modal.open(this.modal, {
-          onDismiss: () => this.reconsider(),
-          returnFocus: this.btnB,
-          inertTarget: this.wrap
-        });
-      }, T(1500));
+        spawnRing(c.x, c.y, 'gold');
+        showToast('🧘 功德已连通，祈愿法会启幕！', 1400);
+        Sound.play('woodenfish');
+      }, T(200));
+      later(() => go('zen'), T(1500));
     },
 
-    spawnQmarks() {
-      const n = reduceMotion ? 4 : 10;
-      for (let i = 0; i < n; i++) {
-        const q = document.createElement('span');
-        q.className = 'qmark';
-        q.textContent = Math.random() < 0.75 ? '?' : '？';
-        q.style.left = (6 + Math.random() * 88) + '%';
-        q.style.top = (20 + Math.random() * 65) + '%';
-        q.style.setProperty('--r', (Math.random() * 60 - 30) + 'deg');
-        q.style.setProperty('--s', (0.7 + Math.random() * 0.9).toFixed(2));
-        q.style.animationDelay = (Math.random() * 0.5).toFixed(2) + 's';
-        this.qmarks.appendChild(q);
-        q.addEventListener('animationend', () => q.remove(), { once: true });
-      }
+    chooseC() {
+      if (state.busy || state.l5Phase !== 'question') return;
+      lock(this.card, true);
+      this.btnC.classList.add('is-chosen');
+      this.shake.classList.add('is-pulse');
+      Sound.play('cash');
+      const c = centerOf(this.card);
+      const b = centerOf(this.btnC);
+      FX.sparkle(b.x, b.y, { count: 32, hues: [150, 160, 44], speed: 4.4 });
+      later(() => {
+        spawnRing(c.x, c.y, 'gold');
+        showToast('👑 降维通道开启，校董免试直通！', 1400);
+        Sound.play('cash');
+      }, T(200));
+      later(() => go('tycoon'), T(1500));
     },
 
     reconsider() {
-      Modal.close(this.modal);
-      this.btnB.classList.remove('is-sunk');
-      this.emoji.className = 'big-emoji';
+      if (this.modal) Modal.close(this.modal);
+      this.btnB.classList.remove('is-chosen');
       lock(this.card, false);
     },
 
     insist() {
-      Modal.close(this.modal, true);
+      if (this.modal) Modal.close(this.modal, true);
       go('end');
     }
   };
   onTap(L5.skip, () => L5.skipIntro());
   onTap(L5.btnA, () => L5.chooseA());
   onTap(L5.btnB, () => L5.chooseB());
-  onTap($('#btnReconsider'), () => L5.reconsider());
-  onTap($('#btnInsist'), () => L5.insist());
+  onTap(L5.btnC, () => L5.chooseC());
+  if ($('#btnReconsider')) onTap($('#btnReconsider'), () => L5.reconsider());
+  if ($('#btnInsist')) onTap($('#btnInsist'), () => L5.insist());
 
-  /* ---------- 结局 A：奖励 ---------- */
+  /* ---------- 结局 A：金榜题名 · 拟录取盛典 ---------- */
   const WIN = {
     el: $('#scene-win'),
     win: $('#win'),
@@ -704,7 +701,94 @@
   onTap($('#btnReplayWin'), () => resetGame());
   onTap($('#btnRewatch'), () => WIN.rewatch(), 900);
 
-  /* ---------- 结局 B：坚持己见 ---------- */
+  /* ---------- 结局 B：赛博祈福法会（可敲击木鱼积攒功德） ---------- */
+  const ZEN = {
+    el: $('#scene-zen'),
+    wrap: $('#zenWrap'),
+    btnFish: $('#btnWoodenFish'),
+    btnStrike: $('#btnStrikeZen'),
+    stage: $('#meritStage'),
+    countEl: $('#zenCountNum'),
+    poolEl: $('#zenMeritPool'),
+    count: 1,
+
+    enter() {
+      FX.stopShow();
+      FX.playZen();
+      this.wrap.classList.remove('is-play');
+      reflow(this.wrap);
+      this.wrap.classList.add('is-play');
+      this.count = 1;
+      this.updateStats();
+      Sound.play('woodenfish');
+    },
+
+    updateStats() {
+      if (this.countEl) this.countEl.textContent = String(this.count);
+      if (this.poolEl) this.poolEl.textContent = '+' + (this.count * 100);
+    },
+
+    strike() {
+      Sound.play('woodenfish');
+      if (this.btnFish) {
+        this.btnFish.classList.remove('is-striking');
+        reflow(this.btnFish);
+        this.btnFish.classList.add('is-striking');
+      }
+
+      this.count++;
+      this.updateStats();
+
+      // 动态飘出浮动功德词
+      if (this.stage) {
+        const MERIT_PHRASES = [
+          '功德 +1', '上岸率 +5%', '初试大定 +1', '肖秀荣保佑 +1',
+          '英语阅读全对 +1', '政治大题全中 +1', '专业课高分 +10',
+          '心想事成 +100', '导师已在校门相迎 +1'
+        ];
+        const phrase = MERIT_PHRASES[(Math.random() * MERIT_PHRASES.length) | 0];
+        const item = document.createElement('span');
+        item.className = 'merit-item';
+        item.textContent = phrase;
+        item.style.left = (25 + Math.random() * 50) + '%';
+        item.style.top = (25 + Math.random() * 25) + '%';
+        this.stage.appendChild(item);
+        item.addEventListener('animationend', () => item.remove(), { once: true });
+      }
+
+      // 每敲 5 次放一圈金花
+      if (this.count % 5 === 0 && this.btnFish) {
+        const c = centerOf(this.btnFish);
+        FX.sparkle(c.x, c.y, { count: 22, hues: [44, 280], speed: 3.5 });
+      }
+    }
+  };
+  if (ZEN.btnFish) onTap(ZEN.btnFish, () => ZEN.strike());
+  if (ZEN.btnStrike) onTap(ZEN.btnStrike, () => ZEN.strike());
+  if ($('#btnReplayZen')) onTap($('#btnReplayZen'), () => resetGame());
+
+  /* ---------- 结局 C：华尔街终身荣誉校董（漫天金币美钞雨） ---------- */
+  const TYCOON = {
+    el: $('#scene-tycoon'),
+    wrap: $('#tycoonWrap'),
+    enter() {
+      FX.stopShow();
+      FX.playTycoon();
+      this.wrap.classList.remove('is-play');
+      reflow(this.wrap);
+      this.wrap.classList.add('is-play');
+      Sound.play('cash');
+    },
+    rainAgain() {
+      FX.moneyRain(150);
+      Sound.play('coin');
+      later(() => Sound.play('cash'), 250);
+    }
+  };
+  if ($('#btnTycoonRain')) onTap($('#btnTycoonRain'), () => TYCOON.rainAgain());
+  if ($('#btnReplayTycoon')) onTap($('#btnReplayTycoon'), () => resetGame());
+
+  /* ---------- 备用结局：坚持己见 ---------- */
   const END = {
     el: $('#scene-end'),
     enter() {
@@ -715,17 +799,17 @@
       items.forEach((el, i) => later(() => reveal(el), T(250 + i * 220)));
     }
   };
-  onTap($('#btnReplayEnd'), () => resetGame());
+  if ($('#btnReplayEnd')) onTap($('#btnReplayEnd'), () => resetGame());
 
   /* ======================== 5. 路由与状态机 ======================== */
 
-  const SCENES = { level1: L1, level2: L2, level3: L3, level4: L4, level5: L5, win: WIN, end: END };
-  const PROGRESS = { level1: 1, level2: 2, level3: 3, level4: 4, level5: 5, win: 5, end: 5 };
+  const SCENES = { level1: L1, level2: L2, level3: L3, level4: L4, level5: L5, win: WIN, zen: ZEN, tycoon: TYCOON, end: END };
+  const PROGRESS = { level1: 1, level2: 2, level3: 3, level4: 4, level5: 5, win: 5, zen: 5, tycoon: 5, end: 5 };
   const segs = $$('.progress__seg');
 
   function updateProgress(name) {
     const n = PROGRESS[name] || 1;
-    const done = name === 'win' || name === 'end';
+    const done = name === 'win' || name === 'zen' || name === 'tycoon' || name === 'end';
     $('#progNow').textContent = '0' + n;
     segs.forEach((s, i) => {
       s.classList.toggle('is-filled', i < n);

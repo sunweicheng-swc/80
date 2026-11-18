@@ -525,6 +525,61 @@
       });
     },
 
+    /** 财阀狂欢：漫天金币与美钞雨飘落 */
+    moneyRain(n) {
+      const MONEY_COLORS = ['#ffd700', '#ffea75', '#48bb78', '#2f855a', '#38a169', '#f6e05e', '#fffbeb', '#10b981'];
+      n = n || 160;
+      const cap = Math.round(300 * this.quality);
+      n = Math.min(Math.round(n * (this.quality < 0.7 ? 0.65 : 1)), cap - this.confettiList.length);
+      for (let i = 0; i < n; i++) {
+        const isBill = Math.random() < 0.55;
+        this.confettiList.push({
+          x: rand(-20, this.W + 20),
+          y: rand(-this.H * 0.7, -12),
+          vx: rand(-1, 1),
+          vy: rand(1.5, 3.4),
+          term: rand(1.8, 3.5),
+          w: isBill ? rand(16, 26) : rand(9, 15),
+          h: isBill ? rand(8, 14) : rand(9, 15),
+          rot: rand(0, TAU), vr: rand(-0.08, 0.08),
+          tilt: rand(0, TAU), ts: rand(0.04, 0.11),
+          sway: rand(0.8, 2.0), ph: rand(0, TAU),
+          c: pick(MONEY_COLORS),
+          round: !isBill
+        });
+      }
+      this.frontDirty = true;
+      this._ensureLoop();
+    },
+
+    /** 财阀狂欢：金币美钞暴风雨与金色流星 */
+    playTycoon() {
+      this.stopShow();
+      this.moneyRain(180);
+      const ev = [];
+      const at = (t, fn) => ev.push({ t: t, fn: fn });
+      const L = (fx, fy, o) => () => this._L(fx, fy, o);
+      for (let i = 1; i <= 6; i++) {
+        at(i * 0.7, () => this.moneyRain(35));
+        at(i * 0.9, L(rand(0.15, 0.85), rand(0.12, 0.25), { shape: 'sphere', hue: 44, scale: 0.85 }));
+      }
+      this._runShow(ev, {
+        loop: () => {
+          if (Math.random() < 0.6) this.moneyRain(25);
+          else this._L(rand(0.2, 0.8), rand(0.15, 0.3), { shape: 'sphere', hue: 44, scale: 0.7 });
+        },
+        loopInterval: () => rand(1.8, 3.2),
+        loopStart: 5
+      });
+    },
+
+    /** 禅意祈福：佛光光晕与金光微粒 */
+    playZen() {
+      this.stopShow();
+      this.clear();
+      this.setAmbient({ stars: true, starAlpha: 0.95, motes: true, moteHue: 44, shooting: true, sparse: false });
+    },
+
     /* ======================== 主循环 ======================== */
 
     _hasWork() {

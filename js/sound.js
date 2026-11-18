@@ -142,6 +142,19 @@
       this._tone(987, 0.18, { type: 'sine', gain: 0.15 });
       this._tone(1318, 0.22, { type: 'sine', gain: 0.18, delay: 0.08 });
     },
+    // 财阀收银与巨额金币 Cha-ching!
+    _cash() {
+      [987, 1318, 1568, 2093].forEach((f, i) => this._tone(f, 0.14, { type: 'sine', gain: 0.16, delay: i * 0.055 }));
+      this._tone(2637, 0.42, { type: 'triangle', gain: 0.2, delay: 0.22 });
+      this._noise(0.18, { filter: 'highpass', from: 3500, gain: 0.08, delay: 0.24 });
+    },
+    // 空灵清脆的赛博木鱼敲击声
+    _woodenfish() {
+      if (this._throttle('woodenfish', 60)) return;
+      this._tone(640, 0.11, { type: 'sine', gain: 0.45, slideTo: 480 });
+      this._tone(1280, 0.05, { type: 'triangle', gain: 0.18, slideTo: 880 });
+      this._noise(0.06, { filter: 'bandpass', from: 900, to: 420, q: 3.5, gain: 0.22 });
+    },
     // 警报嘀嘀声
     _alarm() {
       for (let i = 0; i < 3; i++) {
