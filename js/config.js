@@ -15,7 +15,7 @@ window.GAME_CONFIG = {
   brandName: '良心大考验',
 
   /* 被提问者姓名（最终关问题中的 {name}） */
-  targetName: '温晓健',
+  targetName: '陈九源',
 
   /* 页面底部低调说明 */
   footerNote: '仅供朋友间娱乐',
@@ -103,7 +103,7 @@ window.GAME_CONFIG = {
     stage: '第六关 · 终极考验',
     introText: '最终考验，即将开始……',
     skip: '跳过动画',
-    question: '{name}是不是混蛋？',
+    question: '{name}能不能考研上岸？',
     answerA: '那必然是啊',
     answerB: '我觉得不是',
     tapTip: '✨ 轻触夜空，可以放一朵小烟花'
