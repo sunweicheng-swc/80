@@ -566,8 +566,9 @@
       later(() => reveal($('.stage-tag', this.el)), T(450 * d));
       later(() => this.q.classList.add('is-typing'), T(650 * d));
       const done = T(650 * d) + (reduceMotion ? 180 : typeDuration(n) * (instant ? 0.6 : 1));
-      later(() => reveal(this.btnA), done);
-      later(() => reveal(this.btnB), done + T(150));
+      later(() => reveal($('#q5Sub')), done);
+      later(() => reveal(this.btnA), done + T(120));
+      later(() => reveal(this.btnB), done + T(240));
       later(() => reveal($('.tap-tip', this.el)), done + T(700));
     },
 
